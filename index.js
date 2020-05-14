@@ -1,12 +1,18 @@
-/**
- * @format
- */
-
-import {AppRegistry} from 'react-native';
-//import App from './src/screens/App';
+import 'react-native-gesture-handler';
+import React from 'react';
+import {AppRegistry, SafeAreaView} from 'react-native';
+import Routes from './src/routes/Routes';
 import {name as appName} from './app.json';
-import Login from './src/screens/Login';
-import Register from './src/screens/Register';
-AppRegistry.registerComponent('ToDoManager', () => Register);
+import {NavigationContainer} from '@react-navigation/native';
 
-//AppRegistry.registerComponent(appName, () => App);
+const wrappedRoutes = () => {
+  return (
+    <NavigationContainer>
+      <SafeAreaView style={{flex: 1}}>
+        <Routes />
+      </SafeAreaView>
+    </NavigationContainer>
+  );
+};
+
+AppRegistry.registerComponent(appName, () => wrappedRoutes);
