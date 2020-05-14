@@ -15,3 +15,10 @@ export const createUserOnFirebaseAsync = async (email, password) => {
     .createUserWithEmailAndPassword(email, password);
   return user;
 };
+
+export async function signInOnFirebaseAsync(email, password) {
+  const user = await firebase
+    .auth()
+    .signInWithEmailAndPassword(email, password);
+  return user;
+}
