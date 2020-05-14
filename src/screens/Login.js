@@ -10,6 +10,7 @@ import {
   Alert,
 } from 'react-native';
 import {signInOnFirebaseAsync} from '../services/FirebaseApi';
+import {CommonActions} from '@react-navigation/native';
 const img = require('../assets/TodoList.png');
 const Login = (props) => {
   const [email, setEmail] = useState(props.email);
@@ -21,11 +22,16 @@ const Login = (props) => {
         'User Authenticated',
         `User ${user.email} has succesfuly been authenticated!`,
       );
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'TaskList'}],
+        }),
+      );
     } catch (error) {
       Alert.alert('Login Failed', error.message);
     }
   };
-
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.topView}>
