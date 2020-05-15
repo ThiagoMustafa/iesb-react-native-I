@@ -9,15 +9,41 @@ import {
   Alert,
 } from 'react-native';
 import {writeTaskOnFirebaseAsync} from '../services/FirebaseApi';
+
 export default class Task extends Component {
+  static navigationOptions = {
+    title: 'Tarefa',
+  };
+
   state = {
+    key: '',
     title: '',
     resume: '',
     priority: true,
     isDone: false,
   };
+
+  constructor(props) {
+    super(props);
+
+    try {
+      const task = this.props.route.params.task;
+
+      this.state = {
+        key: task.key,
+        title: task.title,
+        resume: task.resume,
+        priority: task.priority,
+        isDone: task.isDone,
+      };
+    } catch (error) {
+      console.log('error');
+    }
+  }
+
   async _saveTaskAsync() {
     var task = {
+      key: this.state.key,
       title: this.state.title,
       resume: this.state.resume,
       priority: this.state.priority,
@@ -27,21 +53,22 @@ export default class Task extends Component {
       await writeTaskOnFirebaseAsync(task);
       this.props.navigation.goBack();
     } catch (error) {
-      Alert.alert('Erro Saving', error.message);
+      Alert.alert('Erro ao salvar', error.message);
     }
   }
+
   render() {
     return (
       <View style={styles.container}>
         <TextInput
           style={styles.input}
-          placeholder="Title"
+          placeholder="Título"
           value={this.state.title}
           onChangeText={(value) => this.setState({title: value})}
         />
         <TextInput
           style={[styles.input, styles.multilineInput]}
-          placeholder="Resume"
+          placeholder="Descrição"
           multiline={true}
           numberOfLines={4}
           value={this.state.resume}
@@ -53,7 +80,7 @@ export default class Task extends Component {
             onValueChange={(value) => this.setState({priority: value})}
             value={this.state.priority}
           />
-          <Text style={styles.switchText}>Hight Priority</Text>
+          <Text style={styles.switchText}>Prioridade máxima</Text>
         </View>
         <View style={styles.switchContainer}>
           <Switch
@@ -61,17 +88,18 @@ export default class Task extends Component {
             onValueChange={(value) => this.setState({isDone: value})}
             value={this.state.isDone}
           />
-          <Text style={styles.switchText}>Is Done?</Text>
+          <Text style={styles.switchText}>Feita?</Text>
         </View>
         <Button
           style={styles.button}
-          title="Save"
+          title="Salvar"
           onPress={() => this._saveTaskAsync()}
         />
       </View>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
   KeyboardAvoidingView,
   View,
   Image,
@@ -13,9 +12,10 @@ import {
 import {createUserOnFirebaseAsync} from '../services/FirebaseApi';
 
 const img = require('../assets/TodoList.png');
+
 export default class Register extends Component {
   static navigationOptions = {
-    title: 'Register',
+    title: 'Registrar',
   };
 
   state = {
@@ -23,15 +23,15 @@ export default class Register extends Component {
     password: '',
   };
 
-  async _createUserAsync() {
+  async createUserAsync() {
     try {
-      const user = await createUserOnFirebaseAsync(
+      const result = await createUserOnFirebaseAsync(
         this.state.email,
         this.state.password,
       );
       Alert.alert(
-        'User Created',
-        `User ${user.email} has succesfuly been created!`,
+        'Usuário criado!',
+        `O usuário ${result.email} foi criado com sucesso!`,
         [
           {
             text: 'Ok',
@@ -42,7 +42,7 @@ export default class Register extends Component {
         ],
       );
     } catch (error) {
-      Alert.alert('Create User Failed!', error.message);
+      Alert.alert('Falha ao Criar Usuário!', error.message);
     }
   }
 
@@ -51,7 +51,7 @@ export default class Register extends Component {
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.topView}>
           <Image style={styles.img} source={img} />
-          <Text style={styles.title}>Registering new user</Text>
+          <Text style={styles.title}>Registrando novo usuário</Text>
         </View>
         <View style={styles.bottomView}>
           <TextInput
@@ -59,25 +59,24 @@ export default class Register extends Component {
             placeholder="Email"
             keyboardType={'email-address'}
             autoCapitalize="none"
-            onChangeText={(email) => this.setState({email})}
+            onChangeText={(text) => this.setState({email: text})}
           />
           <TextInput
             style={styles.input}
-            placeholder="Password"
+            placeholder="Senha"
             secureTextEntry={true}
-            onChangeText={(password) => this.setState({password})}
+            onChangeText={(text) => this.setState({password: text})}
           />
           <Button
-            title="Register User"
-            onPress={() => {
-              this._createUserAsync();
-            }}
+            title="Registrar Usuário"
+            onPress={() => this.createUserAsync()}
           />
         </View>
       </KeyboardAvoidingView>
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
